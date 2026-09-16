@@ -1,16 +1,6 @@
 
-class PrecioNoValido(Exception):
-    pass
-class DescripcionVacia(Exception):
-    pass
 
-def verificarPrecio(precio):
-    if precio < 0 or precio == 0:
-        raise PrecioNoValido("El precio no puede ser menor o igual a 0.")
-def comprobarDescripcion(descripcion):
-    if not descripcion.strip():
-        raise DescripcionVacia("Debes añadir una descripción")
-
+from funciones import añadirGasto, verGastos, totalGastos
 #Menú bienvenida
 print("Bienvenido al gestor de gastos")
 gastos = []
@@ -24,35 +14,23 @@ while True:
     print("4. Salir")
     opcion = input("Seleccione 1, 2, 3 o 4 para continuar: ")
     match opcion:
+        
         case "1":
             print("Has elegido añadir un gasto")
-            try:
-                descripcion = input("Describe brevemente el gasto: ")
-                comprobarDescripcion(descripcion)
-                precio = input("Indica el precio del gasto: ")
-                precioBueno = float(precio)
-                verificarPrecio(precioBueno)
-                gasto = {"descripcion": descripcion.strip(), "precio": precioBueno}
-                gastos.append(gasto)
-            except DescripcionVacia as e:
-                print(f"Error: {e}")
-            except ValueError:
-                print("Error: El precio debe ser un número entero o decimal.")
-            except PrecioNoValido as e:
-                print(f"Error: {e}")
+            descripcion = input("Describe brevemente el gasto: ")
+            precio = input("Indica el precio del gasto: ")
+            añadirGasto(descripcion, precio, gastos)
+            
         case "2":
-            print("========== GASTOS ==========")
-            for i, gasto in enumerate(gastos, start=1):
-                print(f"{i}. {gasto['descripcion']} - {gasto['precio']:.2f}€")
+            verGastos(gastos)
+            
         case "3":
-            total = 0
-            print("Has elegido ver el total")
-            for gasto in gastos:
-                total += gasto['precio']
-            print(f"El total de gastos es: {total}€")
+            totalGastos(gastos)
+            
         case "4":
             print("Gracias por usar el programa!")
             break
+        
         case _:
             print("Opción no válida. Selecciona 1, 2, 3 o 4.")
 
