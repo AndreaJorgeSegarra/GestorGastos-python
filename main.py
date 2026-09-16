@@ -1,8 +1,17 @@
-class MayorDistintoCero(Exception):
+
+class PrecioNoValido(Exception):
     pass
+class DescripcionVacia(Exception):
+    pass
+
 def verificarPrecio(precio):
     if precio < 0 or precio == 0:
-        raise MayorDistintoCero("El precio no puede ser menor o igual a 0.")
+        raise PrecioNoValido("El precio no puede ser menor o igual a 0.")
+def comprobarDescripcion(descripcion):
+    if not descripcion.strip():
+        raise DescripcionVacia("Debes añadir una descripción")
+
+#Menú bienvenida
 print("Bienvenido al gestor de gastos")
 gastos = []
 while True:
@@ -17,16 +26,19 @@ while True:
     match opcion:
         case "1":
             print("Has elegido añadir un gasto")
-            descripcion = input("Describe brevemente el gasto: ")
             try:
+                descripcion = input("Describe brevemente el gasto: ")
+                comprobarDescripcion(descripcion)
                 precio = input("Indica el precio del gasto: ")
                 precioBueno = float(precio)
                 verificarPrecio(precioBueno)
-                gasto = {"descripcion": descripcion, "precio": precioBueno}
+                gasto = {"descripcion": descripcion.strip(), "precio": precioBueno}
                 gastos.append(gasto)
+            except DescripcionVacia as e:
+                print(f"Error: {e}")
             except ValueError:
                 print("Error: El precio debe ser un número entero o decimal.")
-            except MayorDistintoCero as e:
+            except PrecioNoValido as e:
                 print(f"Error: {e}")
         case "2":
             print("========== GASTOS ==========")
@@ -42,5 +54,5 @@ while True:
             print("Gracias por usar el programa!")
             break
         case _:
-            print("Opción no váldia. Selecciona 1, 2, 3 o 4.")
+            print("Opción no válida. Selecciona 1, 2, 3 o 4.")
 
